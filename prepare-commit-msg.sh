@@ -56,3 +56,5 @@ BRANCH_IN_COMMIT=$(grep -c "\[$BRANCH_NAME\]" $1)
 if [ -n "$BRANCH_NAME" ] && ! [[ $BRANCH_EXCLUDED -eq 1 ]] && ! [[ $BRANCH_IN_COMMIT -ge 1 ]]; then 
   sed -i.bak -e "1s/^/[$BRANCH_NAME] /" $1
 fi
+
+git secrets --prepare_commit_msg_hook -- "$@"
