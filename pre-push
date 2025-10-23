@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# =======================================================
+# == CẤU HÌNH WHITELIST (Chỉ cho phép mẫu này)
+# =======================================================
+# Mẫu regex BẮT BUỘC
+# Sẽ khớp:
+#   feature/ph1/VTI_sub/123_task
+#   feature/phase3/TMA_sub/456_desc
+ALLOWED_FEATURE_REGEX="^feature/[^/]+/[^/]+_sub/.*$"
+
+
+echo "--- [Kiểm tra pre-push] ---"
+
+while read local_ref local_sha remote_ref remote_sha
+do
+    # Lấy tên branch sạch
+    branch_name=${remote_ref#"refs/heads/"}
+    
+    echo " "
+    echo "--- Đang kiểm tra branch: '$branch_name' ---"
+
+    # =======================================================
+    # == CHỈ KIỂM TRA MỘT QUY TẮC DUY NHẤT
+    # =======================================================
+    if [[ "$branch_name" =~ $ALLOWED_FEATURE_REGEX ]]; then
+        
+        # KHỚP VỚI MẪU CHO PHÉP
+        echo " > Branch HỢP LỆ. (Cho phép)"
+        continue # Cho phép, kiểm tra branch tiếp theo
+    
+    else
+        # KHÔNG KHỚP -> CHẶN
+        # (Bao gồm "master", "develop", "feature/ph1/TMA/123", v.v.)
+        echo "======================================================" >&2
+        echo " LỖI: PUSH BỊ CHẶN!" >&2
+        echo " Branch '$branch_name' KHÔNG KHỚP với định dạng duy nhất được cho phép." >&2
+        echo " Định dạng BẮT BUỘC: feature/*/*_sub/*" >&2
+        echo " (Ví dụ: feature/ph1/CUSTOMER_sub/123_task)" >&2
+        echo "======================================================" >&2
+        
+        exit 1 # Hủy push ngay lập tức
+    fi
+    
+done
+
+echo " "
+echo "--- [Tất cả branch đều hợp lệ] ---"
+exit 0
