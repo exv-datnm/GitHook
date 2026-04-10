@@ -1,0 +1,14 @@
+#!/bin/bash
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+PATTERN="^\[#[0-9]+\]"
+
+if [[ ! $COMMIT_MSG =~ $PATTERN ]];then
+    echo"Error: Invalid commit message format."
+    echo"Expected format: [#<PPIH Redmine Ticket ID>][<Team ID>]<Description>"
+    echo"Example: [#12345678][ai]Add login validation"
+    echo"Current: $COMMIT_MSG"
+    exit 1
+fi

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+COMMIT_MSG_FILE="$1"
+sed -i "1s/^/[#<PPIH Redmine Ticket ID>][<Team ID>]<Description>/ "$COMMIT_MSG_FILE"
+

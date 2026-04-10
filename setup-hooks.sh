@@ -31,6 +31,8 @@ install_hook() {
 }
 
 # Execute installation for your hooks
+install_hook "commit-msg"
+install_hook "prepare-commit-msg"
 install_hook "pre-commit"
 install_hook "pre-push"
 # install_hook "prepare-commit-msg" # Optional: if you use the auto-prefix logic
